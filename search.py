@@ -15,7 +15,7 @@ def print_index_for_word(word, index):
         base = "{:>5} | {}"
         print()
         print(base.format("Count", "Address"))
-        print("-"*80)
+        print("-" * 80)
         for page in result:
             print(base.format(result[page], page))
         print()
@@ -32,7 +32,7 @@ def search(search_index, terms):
 
     # seeing as we want an intersection, if any of them are empty return no results
     for term in index_terms:
-        if term == None:
+        if term is None:
             return
 
     # multiply counts together to get index value, if it's not there multiply by 0 to remove the url
@@ -49,7 +49,7 @@ def search(search_index, terms):
         return
 
     # sort descending by index number and return
-    search_results.sort(key = lambda x : x[1], reverse = True)
+    search_results.sort(key=lambda x: x[1], reverse=True)
 
     return search_results
 

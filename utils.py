@@ -1,18 +1,17 @@
 import json
+import os
+from urllib.parse import unquote
 
 
 def get_filename(url):
     # 1 way mapping from url to a page in the file system
 
-    filename = "pages/" + "/".join(url.split("/")[2:])
+    return "pages/" + "/".join(url.split("/")[2:])
 
-    protected_pages = ["index","iso", "example.webscraping.com"]
 
-    for name in protected_pages:
-        if name in filename and not filename.endswith(name):
-            filename = filename.replace(name,"{}_dir".format(name))
-
-    return filename
+def get_nice_name(name):
+    # 1 way mapping from url or filename to a more nice name
+    return unquote(os.path.split(name)[1]).replace('_', ' ')
 
 
 def load_model(base_url):

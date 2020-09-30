@@ -13,9 +13,7 @@ def tag_visible(element):
     invisible_tags = 'style', 'script', 'head', 'title', 'meta', '[document]'
     if element.parent.name in invisible_tags:
         return False
-    if isinstance(element, Comment):
-        return False
-    return True
+    return not isinstance(element, Comment)
 
 
 def get_all_words(text):
@@ -45,9 +43,7 @@ def get_page_index(url):
 
     words = get_all_words(contents)
 
-    grouping = dict(Counter(words))
-
-    return grouping
+    return dict(Counter(words))
 
 
 def add_word_to_index(entry, word, url, full_index):

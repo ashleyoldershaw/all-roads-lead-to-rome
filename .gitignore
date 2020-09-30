@@ -4,3 +4,7 @@
 __pycache__/
 .idea/
 env/
+
+links.csv
+nodes.csv
+edges.csv
