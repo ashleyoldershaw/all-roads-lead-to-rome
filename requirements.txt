@@ -2,3 +2,4 @@ xmltodict
 requests
 beautifulsoup4
 progress
+more-itertools

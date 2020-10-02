@@ -4,6 +4,7 @@ import re
 
 import requests
 from bs4 import BeautifulSoup
+from progress.bar import IncrementalBar
 
 from utils import get_filename
 
@@ -80,26 +81,47 @@ def get_links_from_url(url):
     return get_links_from_wiki(html_page)
 
 
+def scrape_page(base_url, new_url, links_to_follow, visited_links, force_download=False):
+    filename = maybe_save_url(base_url + new_url, force_download=force_download)
+
+    if filename:
+        # if we don't limit this it balloons to huge numbers as Wikipedia has millions of pages!
+        if len(links_to_follow) < 20000:
+            links_to_follow = (links_to_follow | get_links_from_url(base_url + new_url)) - visited_links
+        visited_links.add(new_url)
+    return links_to_follow, visited_links
+
+
+def get_number_of_pages():
+    base_dir = os.path.join('..', 'pages', 'en.wikipedia.org', 'wiki')
+
+    return sum(1 for file in os.listdir(base_dir) if
+               os.path.isfile(os.path.join(base_dir, file)))
+
+
 def scrape_website(seeds, base_url, force_download=False):
     # keep scraping and indexing until we run out of links to find
-
-    # to keep track of what we need to find and where we're going
-    links_to_follow = {"/" + "/".join(seed.split("/")[3:]) for seed in seeds}
     visited_links = set()
+    links_to_follow = set()
+
+    seeds = {"/" + "/".join(seed.split("/")[3:]) for seed in seeds}
+
+    num_pages = get_number_of_pages()
+    print(f"{num_pages} pages exist - scraping more!")
+
+    print(f"Going through {len(seeds)} seed urls:")
+    bar = IncrementalBar(max=len(seeds))
+    for seed in seeds:
+        links_to_follow, visited_links = scrape_page(base_url, seed, links_to_follow, visited_links, force_download)
+        bar.next()
+    bar.finish()
 
     # repeat until we run out of links (which would mean we've trawled Wikipedia completely!)
     while links_to_follow:
         print(F"Number of pages in queue: {len(links_to_follow): <10}", end='\r')
         new_url = random.sample(links_to_follow, 1)[0]
         links_to_follow.remove(new_url)
-
-        filename = maybe_save_url(base_url + new_url, force_download=force_download)
-
-        if filename:
-            # if we don't limit this it balloons to huge numbers as Wikipedia has millions of pages!
-            if len(links_to_follow) < 20000:
-                links_to_follow = (links_to_follow | get_links_from_url(base_url + new_url)) - visited_links
-            visited_links.add(new_url)
+        links_to_follow, visited_links = scrape_page(base_url, new_url, links_to_follow, visited_links, force_download)
 
 
 def get_seed_files():

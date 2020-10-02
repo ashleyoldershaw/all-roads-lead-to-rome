@@ -6,7 +6,7 @@ from urllib.parse import unquote
 def get_filename(url):
     # 1 way mapping from url to a page in the file system
 
-    return "pages/" + "/".join(url.split("/")[2:])
+    return "../pages/" + "/".join(url.split("/")[2:])
 
 
 def get_nice_name(name):

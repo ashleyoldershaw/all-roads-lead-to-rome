@@ -6,7 +6,7 @@ from scraper import scrape_website, get_seed_files
 def run_client(base_url):
     index = {}
 
-    print("There's an old saying that all roads lead to Rome. I wanted to know how long those roads are.")
+    print("There's an old saying that all roads lead to Rome. I wanted to know how long those roads are on Wikipedia.")
     graph = {}
 
     while True:
