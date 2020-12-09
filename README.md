@@ -46,7 +46,7 @@ How to use the system.
 There will be a progress bar that will let you know how far through you are. When you have built the graph, you can load
 it up.
 
-##Using the search engine:
+## Using the search engine:
 
 To begin you must load up the search engine by using the `load` command:
 ```bash
